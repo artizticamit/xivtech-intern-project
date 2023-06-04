@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <!-- <form> -->
+        <span>City names</span>
+        <input type="text" name="cities" id="cityData">
+        <button onclick="getWeather()">submit</button>
+    <!-- </form> -->
+
+    <div id="weatherResults"></div>
+</body>
+
+<script>
+    function getWeather(e){
+        // e.preventDefault()
+        const citiesData = $('#cityData').val()
+        const cities = citiesData.split(',').map(city=>city.trim());
+        console.log(cities)
+
+        $.ajax({
+            url:'/getWeather',
+            method:'POST',
+            contentType:'application/json',
+            data:JSON.stringify({cities}),
+            success:function(response){
+                console.log(response)
+                displayweather(response.weather)
+            },
+            error:function(error){
+                console.log('Error:', error)
+            }
+        })
+    }
+
+    function displayweather(weatherData){
+        let html = '';
+        for(const city in weatherData){
+            html+= `<p>${city}:${weatherData[city]}</p>`
+        }
+        $('#weatherResults').html(html)
+    }
+</script>
+</html>
